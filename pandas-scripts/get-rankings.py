@@ -71,7 +71,6 @@ else:
 
 if all_events == "yes" or all_events == "y":
     get_person_ranks(persons, personId, agg=agg, all_events=True)
-
 else:
     event = input("Event: ")
     get_person_ranks(persons, personId, event, agg)
