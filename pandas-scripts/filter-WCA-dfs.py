@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 #
-"""Get a persons rank on each day they competed and for each event
+"""Note: This is the original work that's been moved into two seperate files.
+
+
+Get a persons rank on each day they competed and for each event
    
 they've ever competed in, by best solve times and by average solve times.
 Make sure you have the competitions dataset and the results dataset
