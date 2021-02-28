@@ -7,7 +7,6 @@ Make sure you have the competitions dataset and the results dataset
 in the same working directory when running this. I'm thinking some more
 work could be done to prevent having to do so much work for each iteration.
 """
-import numpy as np
 import pandas as pd
 
 
