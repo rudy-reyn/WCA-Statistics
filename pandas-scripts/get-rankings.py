@@ -9,7 +9,6 @@ work could be done to prevent having to do so much work for each iteration.
 """
 import pandas as pd
 
-
 def find_rank(df, personId, as_of, agg) -> "DataFrame":
     """Find a person's rank on a pre-specified date"""
     filtered = df.loc[
@@ -42,10 +41,8 @@ def get_person_ranks(df, personId, event="333", agg="best", all_events=False) ->
 
     # Generates a csv for all events a competitor has competed on
     if all_events:
-        events_competed = person_attributes["events_competed"]  
-        
+        events_competed = person_attributes["events_competed"]         
         for event in events_competed:
-
             # is_event prevents having to aggregate each 
             # iteration without filtering the dataframe in place
             is_event = df.eventId == event # Returns a series of boolean values
@@ -53,7 +50,6 @@ def get_person_ranks(df, personId, event="333", agg="best", all_events=False) ->
             for date in dates_competed:
                 rank_at_date = find_rank(df.loc[is_event], personId, date, agg)
                 person_rankings = person_rankings.append(rank_at_date)
-
             # Saving resulting dataframe to csv by event and aggregation type
             person_rankings = person_rankings.sort_values(by="date", ascending=False).set_index("date")
             person_rankings.to_csv(f"{personId}-{event}-{agg}-rankings.csv")
@@ -72,7 +68,6 @@ if agg == "b" or agg == "best":
     persons = pd.read_csv("persons_best_by_dates_competed.csv")
 else:
     persons = pd.read_csv("persons_best_average_by_dates_competed_.csv")
-
 
 if all_events == "yes" or all_events == "y":
     get_person_ranks(persons, personId, agg=agg, all_events=True)
