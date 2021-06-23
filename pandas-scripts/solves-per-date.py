@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-#
 """Grouping competitors with the date of the competition 
 they competed in with the best solve they've had as of that date. 
 """
-import numpy as np
+from numpy import nan
 import pandas as pd
 
 results = pd.read_table("WCA_export_results.tsv")
@@ -11,43 +10,46 @@ competitions = pd.read_table("WCA_export_competitions.tsv")
 
 # Dropping irrelevant columns from the results table
 result_cols = {
-            "columns": [
-            "personCountryId", 
-            "pos", "formatId",
-            "roundTypeId",
-            "regionalSingleRecord", 
-            "regionalAverageRecord"
-             ]}
+    "columns": [
+        "personCountryId",
+        "pos", "formatId",
+        "roundTypeId",
+        "regionalSingleRecord",
+        "regionalAverageRecord"
+    ]
+}
+
 results_replace = {
-            "best": {0: np.nan, -1: np.nan},
-            "average": {0: np.nan, -1: np.nan}
-            }
+    "best": {0: nan, -1: nan},
+    "average": {0: nan, -1: nan}
+}
 
 results = results.drop(**result_cols)
 results.replace(results_replace, inplace=True)
-non_value_cols = [col for col in results.columns if col[0] != "v"]
-results = results[non_value_cols]
+results = results[col for col in results.columns if col[0] != "v"]
 
 # Renaming to convert endDate and endDay columns
 # to datetime and renaming id for joining with results
 dates = ["year", "month", "day"]
-rename_comp_cols = {"columns":{
-             "id": "competitionId",
-             "endMonth": "month", 
-             "endDay": "day"
-             }}
+rename_comp_cols = {
+    "columns": {
+        "id": "competitionId",
+        "endMonth": "month",
+        "endDay": "day"
+    }
+}
 
-drop_comp_cols = {"columns":[
-            "month", "day",
-            ]}
+drop_comp_cols = {
+    "columns": ("month", "day")
+}
 
 # Modifying competition dataframe to combine with results dataframe
 competitions = competitions.drop(**drop_comp_cols)
 competitions.rename(**rename_comp_cols, inplace=True)
+
 competitions["date"] = pd.to_datetime(competitions[dates])
 competitions = competitions[["competitionId", "date"]]
 
-# Merging competition table with results table
 comp_results = pd.merge(competitions, results, on="competitionId")
 
 # Aggregating best solves per competition by person, event, and
